@@ -1,0 +1,99 @@
+.animal-card {
+  background: var(--background-paper);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  transition: all var(--transition-normal);
+  border: 1px solid var(--gray-light);
+}
+
+.animal-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.animal-card-header {
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary-light) 100%);
+  position: relative;
+}
+
+.animal-name {
+  margin: var(--spacing-xs) 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+}
+
+.status-badge {
+  position: absolute;
+  top: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-available {
+  background-color: var(--status-available);
+  color: var(--text-light);
+}
+
+.status-adopted {
+  background-color: var(--status-adopted);
+  color: var(--text-light);
+}
+
+.status-treatment {
+  background-color: var(--status-treatment);
+  color: var(--text-light);
+}
+
+.status-default {
+  background-color: var(--gray-color);
+  color: var(--text-light);
+}
+
+.animal-card-content {
+  padding: var(--spacing-md);
+}
+
+.animal-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xs) 0;
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.info-item:last-child {
+  border-bottom: none;
+}
+
+.info-label {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.info-value {
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+}
+
+.animal-card-footer {
+  padding: var(--spacing-md);
+  border-top: 1px solid var(--gray-light);
+  display: flex;
+  justify-content: center;
+}

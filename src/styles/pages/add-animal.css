@@ -1,0 +1,49 @@
+.add-animal-container {
+  background: var(--background-paper);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.add-animal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-xl);
+  background: var(--background-dark);
+  border-bottom: 1px solid var(--gray-light);
+}
+
+.add-animal-header h1 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: var(--font-size-xl);
+}
+
+.add-animal-form {
+  padding: var(--spacing-xl);
+}
+
+.form-grid {
+  margin-bottom: var(--spacing-xl);
+}
+
+.btn-submit {
+  min-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .add-animal-header {
+    flex-direction: column;
+    gap: var(--spacing-md);
+    text-align: center;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-submit {
+    width: 100%;
+  }
+}
