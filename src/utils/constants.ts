@@ -2,7 +2,7 @@ export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Adote um Amigo';
 
 export const API_URLS = {
   development: 'http://localhost:3000',
-  production: import.meta.env.VITE_API_URL || 'https://seu-backend.onrender.com',
+  production: import.meta.env.VITE_API_URL || 'https://petmatch-backend.onrender.com',
 };
 
 export const ANIMAL_STATUS = {
