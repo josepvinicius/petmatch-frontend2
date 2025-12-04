@@ -1,3 +1,4 @@
+// Dashboard.tsx - APENAS ATUALIZAÇÃO DO BOTÃO E MENSAGEM
 import React, { useEffect, useState } from 'react';
 import '../../../src/styles/pages/dashboard.css';
 import '../../../src/styles/variables.css';
@@ -49,6 +50,7 @@ const Dashboard: React.FC = () => {
         <div className="stat-card">
           <h3>Animais Disponíveis</h3>
           <p className="stat-number">{stats.animaisDisponiveis}</p>
+          <small className="stat-hint">Agora com fotos! 📸</small> {/* ← NOVA LINHA */}
         </div>
         
         <div className="stat-card">
@@ -97,8 +99,8 @@ const Dashboard: React.FC = () => {
         <h2>Ações Rápidas</h2>
         <div className="actions-grid">
           <a href="/admin/novo-animal" className="action-btn">
-            <span>+</span>
-            <p>Cadastrar Novo Animal</p>
+            <span>📷+</span> {/* ← ÍCONE ATUALIZADO */}
+            <p>Cadastrar Animal com Foto</p> {/* ← TEXTO ATUALIZADO */}
           </a>
           <button className="action-btn" onClick={() => alert('Funcionalidade em desenvolvimento')}>
             <span>📋</span>
@@ -113,6 +115,11 @@ const Dashboard: React.FC = () => {
             <p>Gerenciar Usuários</p>
           </button>
         </div>
+      </div>
+      
+      {/* Dica sobre fotos (opcional) */}
+      <div className="dashboard-tip">
+        <p>💡 <strong>Novo:</strong> Agora você pode adicionar fotos aos animais no cadastro!</p>
       </div>
     </div>
   );

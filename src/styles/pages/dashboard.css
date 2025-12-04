@@ -134,3 +134,28 @@
   color: var(--text-primary);
   font-weight: 500;
 }
+
+.stat-hint {
+  color: #666;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+.dashboard-tip {
+  background-color: #e8f5e9;
+  border-left: 4px solid #4CAF50;
+  padding: 12px 16px;
+  margin-top: 20px;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.dashboard-tip p {
+  margin: 0;
+  color: #2e7d32;
+}
+
+.action-btn span {
+  font-size: 1.5rem;
+}
