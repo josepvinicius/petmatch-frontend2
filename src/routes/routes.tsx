@@ -1,5 +1,6 @@
+// AppRoutes.tsx - VERSÃO CORRIGIDA PARA VERCEL
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom'; // ← MUDE BrowserRouter para HashRouter
 import Layout from '../components/layout/Layout';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 
@@ -9,7 +10,7 @@ import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
 import About from '../pages/public/About';
 import AnimalSearch from '../pages/public/AnimalSearch';
-import NotFound from '../pages/public/NotFound'; // ← ADICIONE ESTA IMPORT
+import NotFound from '../pages/public/NotFound';
 
 // User Pages
 import Profile from '../pages/user/Profile';
@@ -20,7 +21,7 @@ import AddAnimal from '../pages/admin/AddAnimal';
 
 const AppRoutes: React.FC = () => {
   return (
-    <BrowserRouter>
+    <HashRouter> {/* ← Mude esta linha */}
       <Routes>
         {/* Layout com todas as rotas dentro */}
         <Route path="/" element={<Layout />}>
@@ -59,11 +60,11 @@ const AppRoutes: React.FC = () => {
             }
           />
 
-          {/* 404 Route - AGORA COM PÁGINA REAL */}
+          {/* 404 Route */}
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 

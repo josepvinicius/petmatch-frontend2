@@ -1,5 +1,6 @@
+// Login.tsx - VERSÃO ATUALIZADA COM REDIRECIONAMENTO
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom'; // ← ADICIONE useLocation
 import { useAuth } from '../../context/AuthContext';
 import Input from '../../components/ui/Input';
 import Button from '../../components/ui/Button';
@@ -13,6 +14,11 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation(); // ← ADICIONE ESTA LINHA
+  
+  // 🔥 CORREÇÃO: Pega a página de onde o usuário veio
+  // O ProtectedRoute passa isso no state
+  const from = (location.state as any)?.from || '/';
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -27,7 +33,8 @@ const Login: React.FC = () => {
 
     try {
       await login(formData.email, formData.senha);
-      navigate('/');
+      // 🔥 CORREÇÃO: Redireciona para a página original, não sempre para home
+      navigate(from, { replace: true });
     } catch (error) {
       console.error('Erro no login:', error);
     } finally {
