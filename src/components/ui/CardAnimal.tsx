@@ -1,9 +1,10 @@
-// CardAnimal.tsx - ATUALIZADO
+// CardAnimal.tsx - ATUALIZADO COM AÇÕES DE ADMIN
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { animalService } from '../../../src/services/animalService';
 import '../../../src/styles/components/card.css';
+import '../../../src/styles/components/admin-actions.css';
 
-// Interface atualizada com o campo 'foto'
 interface CardAnimalProps {
   animal: {
     id: string;
@@ -14,11 +15,14 @@ interface CardAnimalProps {
     saude: string;
     status: string;
     nascimento?: string;
-    foto?: string;  // ← NOVO CAMPO (opcional)
+    foto?: string;
+    faca?: string;
   };
+  isAdmin?: boolean;
+  showActions?: boolean;
+  onDelete?: (id: string) => void;
 }
 
-// Imagens placeholder por espécie
 const getPlaceholderImage = (especie: string): string => {
   const especieLower = especie.toLowerCase();
   
@@ -26,7 +30,7 @@ const getPlaceholderImage = (especie: string): string => {
     return 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop';
   }
   if (especieLower.includes('gato')) {
-    return 'https://images.unsplash.com/photo-1514888286974-6d03bde4ba42?w-400&h=300&fit=crop';
+    return 'https://images.unsplash.com/photo-1514888286974-6d03bde4ba42?w=400&h=300&fit=crop';
   }
   if (especieLower.includes('pássaro') || especieLower.includes('passaro')) {
     return 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=400&h=300&fit=crop';
@@ -35,11 +39,17 @@ const getPlaceholderImage = (especie: string): string => {
     return 'https://images.unsplash.com/photo-1556838803-cc94986cb631?w=400&h=300&fit=crop';
   }
   
-  // Placeholder genérico para outras espécies
   return 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop';
 };
 
-const CardAnimal: React.FC<CardAnimalProps> = ({ animal }) => {
+const CardAnimal: React.FC<CardAnimalProps> = ({ 
+  animal, 
+  isAdmin = false, 
+  showActions = false,
+  onDelete 
+}) => {
+  const navigate = useNavigate();
+  
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'disponível':
@@ -56,18 +66,59 @@ const CardAnimal: React.FC<CardAnimalProps> = ({ animal }) => {
   const calculateAge = (birthDate?: string) => {
     if (!birthDate) return 'Idade não informada';
     
-    const birth = new Date(birthDate);
-    const today = new Date();
-    const years = today.getFullYear() - birth.getFullYear();
-    const months = today.getMonth() - birth.getMonth();
-    
-    if (years > 0) {
-      return `${years} ano${years > 1 ? 's' : ''}`;
+    try {
+      const birth = new Date(birthDate);
+      const today = new Date();
+      
+      if (isNaN(birth.getTime())) return 'Idade não informada';
+      
+      const months = (today.getFullYear() - birth.getFullYear()) * 12 + 
+                    (today.getMonth() - birth.getMonth());
+      
+      if (months >= 24) {
+        const years = Math.floor(months / 12);
+        return `${years} ano${years > 1 ? 's' : ''}`;
+      } else if (months >= 12) {
+        return '1 ano';
+      } else if (months > 0) {
+        return `${months} mês${months > 1 ? 'es' : ''}`;
+      }
+      
+      return 'Recém-nascido';
+    } catch {
+      return 'Idade não informada';
     }
-    return `${Math.abs(months)} mês${Math.abs(months) > 1 ? 'es' : ''}`;
   };
 
-  // Determina a imagem a ser exibida
+  const handleEdit = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    navigate(`/admin/animais/editar/${animal.id}`);
+  };
+
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    if (!window.confirm(`Tem certeza que deseja excluir "${animal.nome}"?`)) {
+      return;
+    }
+
+    try {
+      await animalService.delete(animal.id);
+      
+      if (onDelete) {
+        onDelete(animal.id);
+      } else {
+        alert('Animal excluído com sucesso!');
+        window.location.reload();
+      }
+    } catch (error: any) {
+      console.error('Erro ao excluir animal:', error);
+      alert(error.response?.data?.msg || 'Erro ao excluir animal');
+    }
+  };
+
   const imageSrc = animal.foto || getPlaceholderImage(animal.especie);
 
   return (
@@ -79,19 +130,28 @@ const CardAnimal: React.FC<CardAnimalProps> = ({ animal }) => {
           alt={`Foto do ${animal.nome}`}
           className="animal-image"
           onError={(e) => {
-            // Fallback em caso de erro no carregamento
             e.currentTarget.src = getPlaceholderImage(animal.especie);
           }}
         />
         <span className={`status-badge ${getStatusColor(animal.status)}`}>
           {animal.status}
         </span>
+        
+        {/* Badge Admin (se for admin) */}
+        {isAdmin && (
+          <span className="admin-badge">
+            👑 Admin
+          </span>
+        )}
       </div>
       
       <div className="animal-card-content">
         {/* Nome do Animal */}
         <div className="animal-card-header">
           <h3 className="animal-name">{animal.nome}</h3>
+          {animal.faca && (
+            <span className="animal-breed">{animal.faca}</span>
+          )}
         </div>
         
         {/* Informações do Animal */}
@@ -119,7 +179,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({ animal }) => {
         </div>
       </div>
       
-      {/* Botão de Ação */}
+      {/* Botões de Ação */}
       <div className="animal-card-footer">
         {animal.status.toLowerCase() === 'disponível' ? (
           <Link to={`/animais/${animal.id}`} className="btn btn-primary">
@@ -129,6 +189,24 @@ const CardAnimal: React.FC<CardAnimalProps> = ({ animal }) => {
           <button className="btn btn-secondary" disabled>
             {animal.status}
           </button>
+        )}
+        
+        {/* Ações de Admin (se habilitado) */}
+        {(isAdmin || showActions) && (
+          <div className="admin-actions">
+            <button 
+              className="btn-admin btn-edit"
+              onClick={handleEdit}
+            >
+              ✏️ Editar
+            </button>
+            <button 
+              className="btn-admin btn-delete"
+              onClick={handleDelete}
+            >
+              🗑️ Excluir
+            </button>
+          </div>
         )}
       </div>
     </div>

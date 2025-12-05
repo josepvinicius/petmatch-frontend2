@@ -1,7 +1,7 @@
 // src/pages/public/NotFound.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../../../src/styles/pages/not-found.css';
+import '../../styles/pages/not-found.css';
 
 const NotFound: React.FC = () => {
   return (

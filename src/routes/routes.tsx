@@ -1,6 +1,6 @@
 // AppRoutes.tsx - VERSÃO CORRIGIDA PARA VERCEL
 import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom'; // ← MUDE BrowserRouter para HashRouter
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import ProtectedRoute from '../components/layout/ProtectedRoute';
 
@@ -11,6 +11,7 @@ import Register from '../pages/public/Register';
 import About from '../pages/public/About';
 import AnimalSearch from '../pages/public/AnimalSearch';
 import NotFound from '../pages/public/NotFound';
+import AnimalDetail from '../pages/public/AnimalDetail';
 
 // User Pages
 import Profile from '../pages/user/Profile';
@@ -18,10 +19,11 @@ import Profile from '../pages/user/Profile';
 // Admin Pages
 import Dashboard from '../pages/admin/Dashboard';
 import AddAnimal from '../pages/admin/AddAnimal';
+import EditAnimal from '../pages/admin/EditAnimal'; // ✅ ADICIONE ESTA IMPORT
 
 const AppRoutes: React.FC = () => {
   return (
-    <HashRouter> {/* ← Mude esta linha */}
+    <HashRouter>
       <Routes>
         {/* Layout com todas as rotas dentro */}
         <Route path="/" element={<Layout />}>
@@ -31,6 +33,7 @@ const AppRoutes: React.FC = () => {
           <Route path="cadastro" element={<Register />} />
           <Route path="sobre" element={<About />} />
           <Route path="animais" element={<AnimalSearch />} />
+          <Route path="animais/:id" element={<AnimalDetail />} />
 
           {/* Protected User Routes */}
           <Route
@@ -56,6 +59,15 @@ const AppRoutes: React.FC = () => {
             element={
               <ProtectedRoute adminOnly>
                 <AddAnimal />
+              </ProtectedRoute>
+            }
+          />
+          {/* ✅ ADICIONE ESTA ROTA PARA EDIÇÃO */}
+          <Route
+            path="admin/animais/editar/:id"
+            element={
+              <ProtectedRoute adminOnly>
+                <EditAnimal />
               </ProtectedRoute>
             }
           />
