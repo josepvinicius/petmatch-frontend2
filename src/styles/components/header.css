@@ -3,13 +3,13 @@
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  z-index: 999;
   border-bottom: 1px solid var(--gray-light);
 }
 
 .header-container {
   max-width: var(--container-width);
-  margin: 10px 20px;
+  margin: 5px 20px;
   padding: 0 var(--container-padding);
   display: flex;
   justify-content: space-between;

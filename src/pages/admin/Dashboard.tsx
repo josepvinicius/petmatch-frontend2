@@ -1,9 +1,11 @@
-// Dashboard.tsx - ATUALIZADO COM FUNCIONALIDADES DE GERENCIAMENTO E ROTAS CORRETAS
+// src/pages/admin/Dashboard.tsx - VERSÃO ATUALIZADA
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { animalService } from '../../../src/services/animalService';
-import '../../../src/styles/pages/dashboard.css';
-import '../../../src/styles/variables.css';
+import { animalService } from '../../services/animalService';
+import CardAnimal from '../../components/ui/CardAnimal';
+import ModalEditAnimal from '../../components/ui/ModalEditAnimal';
+import '../../styles/pages/dashboard.css';
+import '../../styles/variables.css';
 
 interface Animal {
   id: string;
@@ -15,6 +17,7 @@ interface Animal {
   status: string;
   nascimento?: string;
   foto?: string;
+  faca?: string;
 }
 
 const Dashboard: React.FC = () => {
@@ -29,6 +32,8 @@ const Dashboard: React.FC = () => {
   });
   
   const [recentAnimals, setRecentAnimals] = useState<Animal[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedAnimalId, setSelectedAnimalId] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -84,9 +89,8 @@ const Dashboard: React.FC = () => {
   };
 
   const handleEditAnimal = (id: string) => {
-    // ✅ CORREÇÃO: Use alert temporário até criar a página de edição
-    alert(`Funcionalidade de edição em desenvolvimento. Animal ID: ${id}`);
-    // Para implementar depois: navigate(`/admin/animais/editar/${id}`);
+    setSelectedAnimalId(id);
+    setModalOpen(true);
   };
 
   const handleDeleteAnimal = async (id: string, nome: string) => {
@@ -112,174 +116,185 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <h1>Dashboard Admin</h1>
-      
-      {/* Stats Cards */}
-      <div className="stats-grid">
-        <div className="stat-card">
-          <h3>Total de Adoções</h3>
-          <p className="stat-number">{stats.totalAdocoes}</p>
-        </div>
+    <>
+      <div className="dashboard-container">
+        <h1>Dashboard Admin</h1>
         
-        <div className="stat-card">
-          <h3>Adoções Concluídas</h3>
-          <p className="stat-number">{stats.adocoesConcluidas}</p>
+        {/* Stats Cards */}
+        <div className="stats-grid">
+          <div className="stat-card">
+            <h3>Total de Adoções</h3>
+            <p className="stat-number">{stats.totalAdocoes}</p>
+          </div>
+          
+          <div className="stat-card">
+            <h3>Adoções Concluídas</h3>
+            <p className="stat-number">{stats.adocoesConcluidas}</p>
+          </div>
+          
+          <div className="stat-card">
+            <h3>Animais Disponíveis</h3>
+            <p className="stat-number">{stats.animaisDisponiveis}</p>
+            <small className="stat-hint">Para adoção 📸</small>
+          </div>
+          
+          <div className="stat-card">
+            <h3>Taxa de Adoção</h3>
+            <p className="stat-number">{stats.taxaAdocao}%</p>
+          </div>
         </div>
-        
-        <div className="stat-card">
-          <h3>Animais Disponíveis</h3>
-          <p className="stat-number">{stats.animaisDisponiveis}</p>
-          <small className="stat-hint">Para adoção 📸</small>
-        </div>
-        
-        <div className="stat-card">
-          <h3>Taxa de Adoção</h3>
-          <p className="stat-number">{stats.taxaAdocao}%</p>
-        </div>
-      </div>
 
-      {/* Animais Recentes - AGORA COM AÇÕES */}
-      <div className="recent-animals">
-        <div className="section-header">
-          <h2>Animais Recentes</h2>
-          <button 
-            className="btn-refresh"
-            onClick={loadData}
-            disabled={loading}
-          >
-            {loading ? 'Atualizando...' : '🔄 Atualizar'}
-          </button>
-        </div>
-        
-        <table className="animals-table">
-          <thead>
-            <tr>
-              <th>Animal</th>
-              <th>Espécie</th>
-              <th>Sexo</th>
-              <th>Status</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recentAnimals.length > 0 ? (
-              recentAnimals.map((animal) => (
-                <tr key={animal.id}>
-                  <td className="animal-name-cell">
-                    <div className="animal-name-with-photo">
-                      {animal.foto ? (
-                        <img 
-                          src={animal.foto} 
-                          alt={animal.nome}
-                          className="animal-table-photo"
-                        />
-                      ) : (
-                        <div className="animal-table-photo-placeholder">
-                          {animal.especie === 'Cachorro' ? '🐶' : 
-                           animal.especie === 'Gato' ? '🐱' : '🐾'}
-                        </div>
-                      )}
-                      <span>{animal.nome}</span>
-                    </div>
-                  </td>
-                  <td>{animal.especie}</td>
-                  <td>{animal.sexo}</td>
-                  <td>
-                    <span className={`status-badge ${
-                      animal.status.toLowerCase() === 'disponível' ? 'status-available' :
-                      animal.status.toLowerCase() === 'adotado' ? 'status-adopted' :
-                      'status-treatment'
-                    }`}>
-                      {animal.status}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="table-actions">
-                      <button 
-                        className="btn-action btn-edit"
-                        onClick={() => handleEditAnimal(animal.id)}
-                        title="Editar animal"
-                      >
-                        ✏️ Editar
-                      </button>
-                      <button 
-                        className="btn-action btn-delete"
-                        onClick={() => handleDeleteAnimal(animal.id, animal.nome)}
-                        disabled={loading}
-                        title="Excluir animal"
-                      >
-                        🗑️ Excluir
-                      </button>
-                      <button 
-                        className="btn-action btn-view"
-                        onClick={() => navigate(`/animais/${animal.id}`)}
-                        title="Ver detalhes"
-                      >
-                        👁️ Ver
-                      </button>
-                    </div>
-                  </td>
+        {/* Animais Recentes - AGORA COM TABELA */}
+        <div className="recent-animals">
+          <div className="section-header">
+            <h2>Animais Recentes</h2>
+            <button 
+              className="btn-refresh"
+              onClick={loadData}
+              disabled={loading}
+            >
+              {loading ? 'Atualizando...' : '🔄 Atualizar'}
+            </button>
+          </div>
+          
+          <div className="table-responsive">
+            <table className="animals-table">
+              <thead>
+                <tr>
+                  <th>Animal</th>
+                  <th>Espécie</th>
+                  <th>Sexo</th>
+                  <th>Status</th>
+                  <th>Ações</th>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="no-data">
-                  Nenhum animal cadastrado ainda.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+              </thead>
+              <tbody>
+                {recentAnimals.length > 0 ? (
+                  recentAnimals.map((animal) => (
+                    <tr key={animal.id}>
+                      <td className="animal-name-cell">
+                        <div className="animal-name-with-photo">
+                          {animal.foto ? (
+                            <img 
+                              src={animal.foto} 
+                              alt={animal.nome}
+                              className="animal-table-photo"
+                            />
+                          ) : (
+                            <div className="animal-table-photo-placeholder">
+                              {animal.especie === 'Cachorro' ? '🐶' : 
+                               animal.especie === 'Gato' ? '🐱' : '🐾'}
+                            </div>
+                          )}
+                          <span>{animal.nome}</span>
+                        </div>
+                      </td>
+                      <td>{animal.especie}</td>
+                      <td>{animal.sexo}</td>
+                      <td>
+                        <span className={`status-badge ${
+                          animal.status.toLowerCase() === 'disponível' ? 'status-available' :
+                          animal.status.toLowerCase() === 'adotado' ? 'status-adopted' :
+                          'status-treatment'
+                        }`}>
+                          {animal.status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="table-actions">
+                          <button 
+                            className="btn-action btn-edit"
+                            onClick={() => handleEditAnimal(animal.id)}
+                            title="Editar animal"
+                          >
+                            ✏️ Editar
+                          </button>
+                          <button 
+                            className="btn-action btn-delete"
+                            onClick={() => handleDeleteAnimal(animal.id, animal.nome)}
+                            disabled={loading}
+                            title="Excluir animal"
+                          >
+                            🗑️ Excluir
+                          </button>
+                          <button 
+                            className="btn-action btn-view"
+                            onClick={() => navigate(`/animais/${animal.id}`)}
+                            title="Ver detalhes"
+                          >
+                            👁️ Ver
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="no-data">
+                      Nenhum animal cadastrado ainda.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-      {/* Quick Actions - CORRIGIDO: USANDO ROTAS EXISTENTES */}
-      <div className="quick-actions">
-        <h2>Ações Rápidas</h2>
-        <div className="actions-grid">
-          {/* ✅ CORREÇÃO: Usa a rota definida no routes.tsx */}
-          <button 
-            className="action-btn"
-            onClick={() => navigate('/admin/novo-animal')}
-          >
-            <span>📷+</span>
-            <p>Cadastrar Animal</p>
-          </button>
-          
-          {/* ✅ Botão que já funciona (volta para dashboard) */}
-          <button 
-            className="action-btn"
-            onClick={() => navigate('/admin')}
-          >
-            <span>📋</span>
-            <p>Ver Todos Animais</p>
-          </button>
-          
-          {/* ✅ Alert temporário até criar as páginas */}
-          <button 
-            className="action-btn" 
-            onClick={() => alert('Funcionalidade "Gerenciar Adoções" em desenvolvimento')}
-          >
-            <span>📊</span>
-            <p>Gerenciar Adoções</p>
-          </button>
-          
-          {/* ✅ Alert temporário até criar as páginas */}
-          <button 
-            className="action-btn"
-            onClick={() => alert('Funcionalidade "Gerenciar Usuários" em desenvolvimento')}
-          >
-            <span>👥</span>
-            <p>Gerenciar Usuários</p>
-          </button>
+        {/* Quick Actions */}
+        <div className="quick-actions">
+          <h2>Ações Rápidas</h2>
+          <div className="actions-grid">
+            <button 
+              className="action-btn"
+              onClick={() => navigate('/admin/novo-animal')}
+            >
+              <span>📷+</span>
+              <p>Cadastrar Animal</p>
+            </button>
+            
+            <button 
+              className="action-btn"
+              onClick={() => navigate('/admin')}
+            >
+              <span>📋</span>
+              <p>Ver Todos Animais</p>
+            </button>
+            
+            <button 
+              className="action-btn" 
+              onClick={() => alert('Funcionalidade "Gerenciar Adoções" em desenvolvimento')}
+            >
+              <span>📊</span>
+              <p>Gerenciar Adoções</p>
+            </button>
+            
+            <button 
+              className="action-btn"
+              onClick={() => alert('Funcionalidade "Gerenciar Usuários" em desenvolvimento')}
+            >
+              <span>👥</span>
+              <p>Gerenciar Usuários</p>
+            </button>
+          </div>
+        </div>
+        
+        {/* Dica */}
+        <div className="dashboard-tip">
+          <p>💡 <strong>Dica:</strong> Clique em "Editar" para alterar informações dos animais diretamente!</p>
         </div>
       </div>
-      
-      {/* Dica */}
-      <div className="dashboard-tip">
-        <p>💡 <strong>Dica:</strong> Clique em "Cadastrar Animal" para adicionar novos animais com fotos!</p>
-      </div>
-    </div>
+
+      {/* Modal de Edição */}
+      <ModalEditAnimal
+        isOpen={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setSelectedAnimalId('');
+        }}
+        animalId={selectedAnimalId}
+        onUpdate={loadData}
+      />
+    </>
   );
 };
 

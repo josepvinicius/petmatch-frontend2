@@ -1,0 +1,290 @@
+/* src/styles/components/modal.css */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 50;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-container {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  width: 100%;
+  max-width: 48rem;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.3s ease-out;
+}
+
+.modal-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.modal-close-btn {
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.modal-close-btn:hover {
+  background-color: #f3f4f6;
+}
+
+.modal-content {
+  padding: 1.5rem;
+}
+
+.photo-section {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+}
+
+.photo-preview-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .photo-preview-container {
+    flex-direction: row;
+  }
+}
+
+.photo-preview {
+  width: 10rem;
+  height: 10rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.photo-upload-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: #0ea5e9;
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.photo-upload-btn:hover {
+  background-color: #0284c7;
+}
+
+.photo-remove-btn {
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.25rem;
+  border-radius: 9999px;
+  transition: background-color 0.2s;
+}
+
+.photo-remove-btn:hover {
+  background-color: #dc2626;
+}
+
+.photo-notes {
+  font-size: 0.875rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+.photo-notes p {
+  margin-bottom: 0.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.25rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-input:focus {
+  outline: none;
+  ring: 2px;
+  ring-color: #0ea5e9;
+  border-color: #0ea5e9;
+}
+
+.form-input.error {
+  border-color: #ef4444;
+}
+
+.form-error {
+  font-size: 0.875rem;
+  color: #ef4444;
+  margin-top: 0.25rem;
+}
+
+.form-notes {
+  background-color: #dbeafe;
+  border: 1px solid #93c5fd;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  margin: 1rem 0;
+}
+
+.form-notes p {
+  font-size: 0.875rem;
+  color: #1e40af;
+}
+
+.modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+@media (min-width: 640px) {
+  .modal-actions {
+    flex-direction: row;
+  }
+}
+
+.btn-save {
+  flex: 1;
+  background-color: #0ea5e9;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: #0284c7;
+}
+
+.btn-save:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-delete {
+  flex: 1;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.btn-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  flex: 1;
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: #d1d5db;
+}
+
+.btn-cancel:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

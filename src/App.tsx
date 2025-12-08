@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from './context/AuthContext';
 import AppRoutes from './routes/routes';
 import './styles/global.css';
+import './styles/components/modal-edit-animal.css';
 
 const App: React.FC = () => {
   return (

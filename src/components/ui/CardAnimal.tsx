@@ -25,7 +25,7 @@ interface CardAnimalProps {
 
 const getPlaceholderImage = (especie: string): string => {
   const especieLower = especie.toLowerCase();
-  
+
   if (especieLower.includes('cachorro') || especieLower.includes('cão')) {
     return 'https://images.unsplash.com/photo-1552053831-71594a27632d?w=400&h=300&fit=crop';
   }
@@ -38,18 +38,18 @@ const getPlaceholderImage = (especie: string): string => {
   if (especieLower.includes('coelho')) {
     return 'https://images.unsplash.com/photo-1556838803-cc94986cb631?w=400&h=300&fit=crop';
   }
-  
+
   return 'https://images.unsplash.com/photo-1543466835-00a7907e9de1?w=400&h=300&fit=crop';
 };
 
-const CardAnimal: React.FC<CardAnimalProps> = ({ 
-  animal, 
-  isAdmin = false, 
+const CardAnimal: React.FC<CardAnimalProps> = ({
+  animal,
+  isAdmin = false,
   showActions = false,
-  onDelete 
+  onDelete
 }) => {
   const navigate = useNavigate();
-  
+
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case 'disponível':
@@ -65,16 +65,16 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
 
   const calculateAge = (birthDate?: string) => {
     if (!birthDate) return 'Idade não informada';
-    
+
     try {
       const birth = new Date(birthDate);
       const today = new Date();
-      
+
       if (isNaN(birth.getTime())) return 'Idade não informada';
-      
-      const months = (today.getFullYear() - birth.getFullYear()) * 12 + 
-                    (today.getMonth() - birth.getMonth());
-      
+
+      const months = (today.getFullYear() - birth.getFullYear()) * 12 +
+        (today.getMonth() - birth.getMonth());
+
       if (months >= 24) {
         const years = Math.floor(months / 12);
         return `${years} ano${years > 1 ? 's' : ''}`;
@@ -83,7 +83,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
       } else if (months > 0) {
         return `${months} mês${months > 1 ? 'es' : ''}`;
       }
-      
+
       return 'Recém-nascido';
     } catch {
       return 'Idade não informada';
@@ -93,20 +93,29 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigate(`/admin/animais/editar/${animal.id}`);
+
+    // Se estiver no dashboard admin, use o modal
+    if (window.location.pathname.includes('/admin')) {
+      // Disparar evento customizado para o modal
+      const event = new CustomEvent('openEditModal', { detail: animal.id });
+      window.dispatchEvent(event);
+    } else {
+      // Navegação normal para página de edição
+      navigate(`/admin/animais/editar/${animal.id}`);
+    }
   };
 
   const handleDelete = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (!window.confirm(`Tem certeza que deseja excluir "${animal.nome}"?`)) {
       return;
     }
 
     try {
       await animalService.delete(animal.id);
-      
+
       if (onDelete) {
         onDelete(animal.id);
       } else {
@@ -125,8 +134,8 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
     <div className="animal-card">
       {/* Seção da Foto do Animal */}
       <div className="animal-card-image">
-        <img 
-          src={imageSrc} 
+        <img
+          src={imageSrc}
           alt={`Foto do ${animal.nome}`}
           className="animal-image"
           onError={(e) => {
@@ -136,7 +145,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
         <span className={`status-badge ${getStatusColor(animal.status)}`}>
           {animal.status}
         </span>
-        
+
         {/* Badge Admin (se for admin) */}
         {isAdmin && (
           <span className="admin-badge">
@@ -144,7 +153,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
           </span>
         )}
       </div>
-      
+
       <div className="animal-card-content">
         {/* Nome do Animal */}
         <div className="animal-card-header">
@@ -153,7 +162,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
             <span className="animal-breed">{animal.faca}</span>
           )}
         </div>
-        
+
         {/* Informações do Animal */}
         <div className="animal-info">
           <div className="info-item">
@@ -178,7 +187,7 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
           </div>
         </div>
       </div>
-      
+
       {/* Botões de Ação */}
       <div className="animal-card-footer">
         {animal.status.toLowerCase() === 'disponível' ? (
@@ -190,17 +199,17 @@ const CardAnimal: React.FC<CardAnimalProps> = ({
             {animal.status}
           </button>
         )}
-        
+
         {/* Ações de Admin (se habilitado) */}
         {(isAdmin || showActions) && (
           <div className="admin-actions">
-            <button 
+            <button
               className="btn-admin btn-edit"
               onClick={handleEdit}
             >
               ✏️ Editar
             </button>
-            <button 
+            <button
               className="btn-admin btn-delete"
               onClick={handleDelete}
             >
